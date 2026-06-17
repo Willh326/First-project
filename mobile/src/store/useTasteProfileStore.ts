@@ -23,6 +23,7 @@ interface TasteProfileState {
   feedItems: FeedItem[];
   feedStatus: FeedStatus;
   feedError: string | null;
+  isLoadingMoreFeed: boolean;
   swipeSessionDeck: Product[];
   swipeSessionStatus: SwipeSessionStatus;
   swipeSessionError: string | null;
@@ -39,6 +40,7 @@ interface TasteProfileState {
   saveProduct: (product: Product) => void;
   unsaveProduct: (productId: string) => void;
   loadFeed: () => Promise<void>;
+  loadMoreFeed: () => Promise<void>;
   startSwipeSession: () => Promise<void>;
   clearSwipeSession: () => void;
 }
@@ -56,6 +58,7 @@ export const useTasteProfileStore = create<TasteProfileState>()(
       feedItems: [],
       feedStatus: 'idle',
       feedError: null,
+      isLoadingMoreFeed: false,
       swipeSessionDeck: [],
       swipeSessionStatus: 'idle',
       swipeSessionError: null,
@@ -77,6 +80,7 @@ export const useTasteProfileStore = create<TasteProfileState>()(
           feedItems: [],
           feedStatus: 'idle',
           feedError: null,
+          isLoadingMoreFeed: false,
           swipeSessionDeck: [],
           swipeSessionStatus: 'idle',
           swipeSessionError: null,
@@ -140,6 +144,37 @@ export const useTasteProfileStore = create<TasteProfileState>()(
             feedStatus: 'error',
             feedError: error instanceof Error ? error.message : 'Something went wrong.',
           });
+        }
+      },
+      loadMoreFeed: async () => {
+        const {
+          tasteProfileText,
+          searchTerms,
+          answers,
+          likedProductIds,
+          passedProductIds,
+          feedItems,
+          feedStatus,
+          isLoadingMoreFeed,
+        } = get();
+        if (!tasteProfileText || feedStatus === 'loading' || isLoadingMoreFeed) return;
+        set({ isLoadingMoreFeed: true });
+        try {
+          const excludeIds = [
+            ...likedProductIds,
+            ...passedProductIds,
+            ...feedItems.map((item) => item.product.id),
+          ];
+          const items = await fetchFeed({
+            summary: tasteProfileText,
+            searchTerms,
+            answers,
+            excludeIds,
+            count: 10,
+          });
+          set({ feedItems: [...feedItems, ...items], isLoadingMoreFeed: false });
+        } catch {
+          set({ isLoadingMoreFeed: false });
         }
       },
       startSwipeSession: async () => {

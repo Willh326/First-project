@@ -20,6 +20,8 @@ export function FeedScreen({ navigation }: Props) {
   const feedStatus = useTasteProfileStore((state) => state.feedStatus);
   const feedError = useTasteProfileStore((state) => state.feedError);
   const loadFeed = useTasteProfileStore((state) => state.loadFeed);
+  const loadMoreFeed = useTasteProfileStore((state) => state.loadMoreFeed);
+  const isLoadingMoreFeed = useTasteProfileStore((state) => state.isLoadingMoreFeed);
   const savedProducts = useTasteProfileStore((state) => state.savedProducts);
   const saveProduct = useTasteProfileStore((state) => state.saveProduct);
   const unsaveProduct = useTasteProfileStore((state) => state.unsaveProduct);
@@ -83,6 +85,13 @@ export function FeedScreen({ navigation }: Props) {
         }
         onRefresh={loadFeed}
         refreshing={feedStatus === 'loading'}
+        onEndReached={loadMoreFeed}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={
+          isLoadingMoreFeed ? (
+            <ActivityIndicator color={colors.accent} style={styles.footerLoader} />
+          ) : null
+        }
       />
     </SafeAreaView>
   );
@@ -103,6 +112,9 @@ const styles = StyleSheet.create({
   list: {
     paddingTop: spacing.sm,
     paddingBottom: spacing.xl,
+  },
+  footerLoader: {
+    marginVertical: spacing.lg,
   },
   headerRow: {
     flexDirection: 'row',
