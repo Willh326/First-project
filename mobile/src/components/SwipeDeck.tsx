@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Swiper, type SwiperCardRefType } from 'rn-swiper-list';
 import { ActionButton } from './ActionButton';
@@ -26,6 +26,13 @@ export function SwipeDeck({
   onSwipedAll,
 }: SwipeDeckProps) {
   const ref = useRef<SwiperCardRefType>(null);
+
+  useEffect(() => {
+    if (deck.length === 0) onSwipedAll();
+    // Only check the initial deck — once swiping starts, the Swiper's own
+    // onSwipedAll handles the deck-emptied-via-swiping case.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const renderCard = useCallback((product: Product) => <ProductCard product={product} />, []);
 

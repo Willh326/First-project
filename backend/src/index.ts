@@ -17,6 +17,15 @@ app.use('/api/profile', profileRouter);
 app.use('/api/feed', feedRouter);
 app.use('/api/swipe-session', swipeSessionRouter);
 
+app.use((_req, res) => {
+  res.status(404).json({ error: 'Not found' });
+});
+
+app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error('Unhandled error', err);
+  res.status(500).json({ error: 'Internal server error' });
+});
+
 const port = Number(process.env.PORT) || 3000;
 app.listen(port, () => {
   console.log(`Backend listening on http://localhost:${port}`);

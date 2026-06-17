@@ -18,7 +18,12 @@ swipeSessionRouter.post('/', (req, res) => {
     return;
   }
 
-  const { searchTerms, answers, excludeIds, count } = parsed.data;
-  const deck = selectProducts({ searchTerms, answers, count, excludeIds });
-  res.json({ deck });
+  try {
+    const { searchTerms, answers, excludeIds, count } = parsed.data;
+    const deck = selectProducts({ searchTerms, answers, count, excludeIds });
+    res.json({ deck });
+  } catch (error) {
+    console.error('Failed to build swipe session', error);
+    res.status(502).json({ error: 'Failed to build swipe session' });
+  }
 });

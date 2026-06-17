@@ -1,8 +1,9 @@
-import { FlatList, Image, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTasteProfileStore } from '../store/useTasteProfileStore';
 import { colors, spacing } from '../theme/colors';
 import { Product } from '../types/product';
+import { openRetailerUrl } from '../utils/links';
 
 export function SavedScreen() {
   const savedProducts = useTasteProfileStore((state) => state.savedProducts);
@@ -20,7 +21,7 @@ export function SavedScreen() {
             <Pressable style={styles.removeButton} onPress={() => unsaveProduct(item.id)}>
               <Text style={styles.removeLabel}>Remove</Text>
             </Pressable>
-            <Pressable style={styles.buyButton} onPress={() => Linking.openURL(item.retailerUrl)}>
+            <Pressable style={styles.buyButton} onPress={() => openRetailerUrl(item.retailerUrl)}>
               <Text style={styles.buyLabel}>Buy</Text>
             </Pressable>
           </View>

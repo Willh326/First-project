@@ -1,6 +1,7 @@
-import { Image, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors, spacing } from '../theme/colors';
 import { FeedItem } from '../types/feed';
+import { openRetailerUrl } from '../utils/links';
 
 interface FeedCardProps {
   item: FeedItem;
@@ -23,7 +24,7 @@ export function FeedCard({ item, isSaved, onToggleSave }: FeedCardProps) {
           <Pressable style={styles.saveButton} onPress={onToggleSave}>
             <Text style={styles.saveLabel}>{isSaved ? 'Saved' : 'Save'}</Text>
           </Pressable>
-          <Pressable style={styles.buyButton} onPress={() => Linking.openURL(product.retailerUrl)}>
+          <Pressable style={styles.buyButton} onPress={() => openRetailerUrl(product.retailerUrl)}>
             <Text style={styles.buyLabel}>Buy</Text>
           </Pressable>
         </View>
