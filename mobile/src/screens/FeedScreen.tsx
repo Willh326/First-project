@@ -22,6 +22,7 @@ export function FeedScreen({ navigation }: Props) {
   const loadFeed = useTasteProfileStore((state) => state.loadFeed);
   const loadMoreFeed = useTasteProfileStore((state) => state.loadMoreFeed);
   const isLoadingMoreFeed = useTasteProfileStore((state) => state.isLoadingMoreFeed);
+  const loadMoreFeedError = useTasteProfileStore((state) => state.loadMoreFeedError);
   const savedProducts = useTasteProfileStore((state) => state.savedProducts);
   const saveProduct = useTasteProfileStore((state) => state.saveProduct);
   const unsaveProduct = useTasteProfileStore((state) => state.unsaveProduct);
@@ -90,6 +91,13 @@ export function FeedScreen({ navigation }: Props) {
         ListFooterComponent={
           isLoadingMoreFeed ? (
             <ActivityIndicator color={colors.accent} style={styles.footerLoader} />
+          ) : loadMoreFeedError ? (
+            <View style={styles.footerError}>
+              <Text style={styles.statusText}>{loadMoreFeedError}</Text>
+              <Pressable style={styles.retryButton} onPress={loadMoreFeed}>
+                <Text style={styles.retryLabel}>Try again</Text>
+              </Pressable>
+            </View>
           ) : null
         }
       />
@@ -114,6 +122,10 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xl,
   },
   footerLoader: {
+    marginVertical: spacing.lg,
+  },
+  footerError: {
+    alignItems: 'center',
     marginVertical: spacing.lg,
   },
   headerRow: {

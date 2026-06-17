@@ -24,6 +24,7 @@ interface TasteProfileState {
   feedStatus: FeedStatus;
   feedError: string | null;
   isLoadingMoreFeed: boolean;
+  loadMoreFeedError: string | null;
   swipeSessionDeck: Product[];
   swipeSessionStatus: SwipeSessionStatus;
   swipeSessionError: string | null;
@@ -59,6 +60,7 @@ export const useTasteProfileStore = create<TasteProfileState>()(
       feedStatus: 'idle',
       feedError: null,
       isLoadingMoreFeed: false,
+      loadMoreFeedError: null,
       swipeSessionDeck: [],
       swipeSessionStatus: 'idle',
       swipeSessionError: null,
@@ -124,7 +126,7 @@ export const useTasteProfileStore = create<TasteProfileState>()(
         const { tasteProfileText, searchTerms, answers, likedProductIds, passedProductIds, feedItems } =
           get();
         if (!tasteProfileText) return;
-        set({ feedStatus: 'loading', feedError: null });
+        set({ feedStatus: 'loading', feedError: null, loadMoreFeedError: null });
         try {
           const excludeIds = [
             ...likedProductIds,
@@ -158,7 +160,7 @@ export const useTasteProfileStore = create<TasteProfileState>()(
           isLoadingMoreFeed,
         } = get();
         if (!tasteProfileText || feedStatus === 'loading' || isLoadingMoreFeed) return;
-        set({ isLoadingMoreFeed: true });
+        set({ isLoadingMoreFeed: true, loadMoreFeedError: null });
         try {
           const excludeIds = [
             ...likedProductIds,
@@ -173,8 +175,11 @@ export const useTasteProfileStore = create<TasteProfileState>()(
             count: 10,
           });
           set({ feedItems: [...feedItems, ...items], isLoadingMoreFeed: false });
-        } catch {
-          set({ isLoadingMoreFeed: false });
+        } catch (error) {
+          set({
+            isLoadingMoreFeed: false,
+            loadMoreFeedError: error instanceof Error ? error.message : 'Could not load more items.',
+          });
         }
       },
       startSwipeSession: async () => {

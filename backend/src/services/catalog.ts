@@ -54,11 +54,3 @@ export function selectProducts({ searchTerms, answers, count, excludeIds = [] }:
 
   return ranked.slice(0, count).map((entry) => entry.product);
 }
-
-export function getAllProducts(): Product[] {
-  return catalog;
-}
-
-export function getProductById(id: string): Product | undefined {
-  return catalog.find((product) => product.id === id);
-}

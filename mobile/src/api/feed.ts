@@ -1,6 +1,7 @@
 import { QuizAnswers } from '../types/quiz';
 import { FeedItem } from '../types/feed';
 import { API_BASE_URL } from './config';
+import { postJson } from './http';
 
 export interface FetchFeedParams {
   summary: string;
@@ -17,16 +18,12 @@ export async function fetchFeed({
   excludeIds,
   count = 10,
 }: FetchFeedParams): Promise<FeedItem[]> {
-  const response = await fetch(`${API_BASE_URL}/api/feed`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ summary, searchTerms, answers, excludeIds, count }),
+  const data = await postJson<{ items: FeedItem[] }>(`${API_BASE_URL}/api/feed`, {
+    summary,
+    searchTerms,
+    answers,
+    excludeIds,
+    count,
   });
-
-  if (!response.ok) {
-    throw new Error(`Failed to load feed (status ${response.status})`);
-  }
-
-  const data: { items: FeedItem[] } = await response.json();
   return data.items;
 }

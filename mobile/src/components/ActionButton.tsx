@@ -12,6 +12,8 @@ export function ActionButton({ label, variant, onPress }: ActionButtonProps) {
     <Pressable
       style={[styles.button, variant === 'like' ? styles.likeButton : styles.passButton]}
       onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={label}
     >
       <Text style={variant === 'like' ? styles.likeLabel : styles.passLabel}>{label}</Text>
     </Pressable>

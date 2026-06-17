@@ -21,10 +21,20 @@ export function FeedCard({ item, isSaved, onToggleSave }: FeedCardProps) {
         <Text style={styles.price}>${product.price.toFixed(2)}</Text>
         <Text style={styles.reason}>{reason}</Text>
         <View style={styles.buttonsRow}>
-          <Pressable style={styles.saveButton} onPress={onToggleSave}>
+          <Pressable
+            style={styles.saveButton}
+            onPress={onToggleSave}
+            accessibilityRole="button"
+            accessibilityLabel={isSaved ? 'Remove from saved' : 'Save'}
+          >
             <Text style={styles.saveLabel}>{isSaved ? 'Saved' : 'Save'}</Text>
           </Pressable>
-          <Pressable style={styles.buyButton} onPress={() => openRetailerUrl(product.retailerUrl)}>
+          <Pressable
+            style={styles.buyButton}
+            onPress={() => openRetailerUrl(product.retailerUrl)}
+            accessibilityRole="button"
+            accessibilityLabel={`Buy ${product.title} at ${product.retailer}`}
+          >
             <Text style={styles.buyLabel}>Buy</Text>
           </Pressable>
         </View>

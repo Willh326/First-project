@@ -18,10 +18,20 @@ export function SavedScreen() {
           <Text style={styles.retailer}>{item.retailer}</Text>
           <Text style={styles.price}>${item.price.toFixed(2)}</Text>
           <View style={styles.buttonsRow}>
-            <Pressable style={styles.removeButton} onPress={() => unsaveProduct(item.id)}>
+            <Pressable
+              style={styles.removeButton}
+              onPress={() => unsaveProduct(item.id)}
+              accessibilityRole="button"
+              accessibilityLabel={`Remove ${item.title} from saved`}
+            >
               <Text style={styles.removeLabel}>Remove</Text>
             </Pressable>
-            <Pressable style={styles.buyButton} onPress={() => openRetailerUrl(item.retailerUrl)}>
+            <Pressable
+              style={styles.buyButton}
+              onPress={() => openRetailerUrl(item.retailerUrl)}
+              accessibilityRole="button"
+              accessibilityLabel={`Buy ${item.title} at ${item.retailer}`}
+            >
               <Text style={styles.buyLabel}>Buy</Text>
             </Pressable>
           </View>
